@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emotion Meters</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        h1 {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            background-color: #3498db;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            color: #fff;
+            margin: 0;
+        }
+
+        .meter-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .meter {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .meter h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .meter-bar {
+            height: 20px;
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            line-height: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .meter-bar::before {
+            content: '';
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #225475 50%, #fff 50%);
+        }
+
+        .meter-bar::before {
+            background-size: 200% 100%;
+            animation: fill 2s linear infinite;
+        }
+
+        @keyframes fill {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .meter:hover {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        .file-upload-section {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .file-upload-section h1 {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .file-upload-form {
+            text-align: center;
+        }
+
+        .custom-upload-button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .custom-upload-button:hover {
+            background-color: #225475;
+        }
+
+        .submit-button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: #225475;
+        }
+
+        .center-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        }
+        
+        /* Styling for the dropdown menu with a blue theme */
+        .dropdown {
+        position: relative;
+        display: inline-block;
+        }
+
+        .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #3498db; /* Blue background color */
+        min-width: 160px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+        display: block;
+        }
+
+        /* Style for dropdown items with blue text */
+        .dropdown-item {
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        color: #fff; /* White text color */
+        }
+
+        .dropdown-item:hover {
+        background-color: #2980b9; /* Darker blue when hovered */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Sentiment Analysis</h1>
+    </div>
+    <div class="container">
+        <h1>Paragraph</h1>
+        <p>{{ paragraph }}</p>
+        <video width="640" height="360" controls>
+            <source src="{{ url_for('static', filename=selected_video) }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <h1>Emotion Meters</h1>
+        <div class="meter-container">
+            <div class="meter">
+                <span class="emoji">😡</span>
+                <h3>Anger</h3>
+                <div class="meter-bar" style="width: {{ anger_percent }}%;">{{ anger_percent }}%</div>
+            </div>
+            <div class="meter">
+                <span class="emoji">😄</span>
+                <h3>Happiness</h3>
+                <div class="meter-bar" style="width: {{ happiness_percent }}%;">{{ happiness_percent }}%</div>
+            </div>
+            <div class="meter">
+                <span class="emoji">😢</span>
+                <h3>Sadness</h3>
+                <div class="meter-bar" style="width: {{ sadness_percent }}%;">{{ sadness_percent }}%</div>
+            </div>
+            <div class="meter">
+                <span class="emoji">😲</span>
+                <h3>Surprise</h3>
+                <div class="meter-bar" style="width: {{ surprise_percent }}%;">{{ surprise_percent }}%</div>
+            </div>
+        </div>
+        <div class="file-upload-section">
+            <h1>File Upload</h1>
+            <form class="file-upload-form" method="post" action="/upload" enctype="multipart/form-data">
+                <div class="menu-container">
+                    <label for="options-menu">Select Video Language:</label>
+                    <select id="options-menu" name="selected_option">
+                        <option value="option1">English</option>
+                        <option value="option2">Hindi</option>
+                        <option value="option3">Marathi</option>
+                    </select>
+                </div>
+                <br>
+                <label for="fileInput" class="custom-upload-button">
+                    <i class="fas fa-upload"></i> Upload a File
+                </label>
+                <br><br>
+                <input type="file" name="file" id="fileInput" style="display: none;">
+                <button type="submit" class="submit-button">Submit</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
