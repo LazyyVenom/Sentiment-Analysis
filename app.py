@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 from sentiAnalysis import convert_video_to_wav
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'file_upload_app/uploads'
+app.config['UPLOAD_FOLDER'] = 'static'
 app.config['ALLOWED_EXTENSIONS'] = {'mp4'}
 app.config['SECRET_KEY'] = 'your_secret_key_here'  
 
