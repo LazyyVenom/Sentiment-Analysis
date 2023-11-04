@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import os
 from werkzeug.utils import secure_filename
-from sentiAnalysis import convert_video_to_wav
+from sentiAnalysis import convert_video_to_wav,sentimentAnalysis
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static'
@@ -45,8 +45,9 @@ def upload():
 
         converted_file = 'audio.wav'
         convert_video_to_wav(file_path, converted_file)
-
-        flash('File uploaded and converted successfully')
+        anger,surprise,sentiment,polarity = sentimentAnalysis()
+        anger_percent = anger
+        flash('File uploaded successfully')
         return render_template('index.html', paragraph=paragraph, anger_percent=anger_percent, happiness_percent=happiness_percent, sadness_percent=sadness_percent, surprise_percent=surprise_percent,selected_video=filename)
 
     flash('Invalid file format. Allowed formats: mp4')
