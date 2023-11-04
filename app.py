@@ -46,13 +46,13 @@ def upload():
         converted_file = 'audio.wav'
         convert_video_to_wav(file_path, converted_file)
         anger,surprise,text,polarity = sentimentAnalysis()
-        anger_percent = anger*80
+        anger_percent = (anger*80)
         
         if polarity > 0:
-            happiness_percent = polarity*85
+            happiness_percent = polarity*100
             sadness_percent = (80 - happiness_percent)//2
         else:
-            sadness_percent = polarity*85
+            sadness_percent = polarity*100
             happiness_percent = (80 - sadness_percent)//2
         
         surprise_percent = surprise*80
