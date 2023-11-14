@@ -1,35 +1,69 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 import os
+from werkzeug.utils import secure_filename
+from sentiAnalysis import convert_video_to_wav,sentimentAnalysis
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'file_upload_app/uploads'  # Set the upload folder
+app.config['UPLOAD_FOLDER'] = 'static'
+app.config['ALLOWED_EXTENSIONS'] = {'mp4','wmv','jpg','png','jpeg'}
+app.config['SECRET_KEY'] = 'your_secret_key_here'  
+
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+paragraph = ""
+anger_percent = 0
+happiness_percent = 0
+sadness_percent = 0
+surprise_percent = 0
 
 @app.route('/')
 def index():
-    # Sample paragraph
-    paragraph = "This will contain a summary kind of thing."
-
-    # Sample emotion percentages (you can replace these with real data)
-    anger_percent = 0
-    happiness_percent = 0
-    sadness_percent = 100
-    surprise_percent = 20
-
-    return render_template('index.html', paragraph=paragraph, anger_percent=anger_percent, happiness_percent=happiness_percent, sadness_percent=sadness_percent, surprise_percent=surprise_percent)
+    return render_template('index.html',uploaded=False, paragraph=paragraph, anger_percent=anger_percent, happiness_percent=happiness_percent, sadness_percent=sadness_percent, surprise_percent=surprise_percent)
 
 @app.route('/upload', methods=['POST'])
-def upload_file():
+def upload():
+    selected_option = request.form.get('selected_option')
+    print(selected_option)
     if 'file' not in request.files:
-        return "No file part"
+        flash('No file part')
+        return redirect(request.url)
 
     file = request.files['file']
 
     if file.filename == '':
-        return "No selected file"
+        flash('No selected file')
+        return redirect(request.url)
 
-    # Print the file name to the terminal
-    print("Uploaded file name:", file.filename)
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(filename)
+        file.save(file_path)
 
+        converted_file = 'audio.wav'
+        convert_video_to_wav(file_path, converted_file)
+        anger,surprise,text,polarity = sentimentAnalysis()
+        anger_percent = (anger*80)
+        
+        if polarity > 0:
+            happiness_percent = polarity*100
+            sadness_percent = (80 - happiness_percent)//2
+        else:
+            sadness_percent = polarity*100
+            happiness_percent = (80 - sadness_percent)//2
+        
+        surprise_percent = surprise*80
+        flash('File uploaded successfully')
+        return render_template('index.html',uploaded=True, paragraph=text, anger_percent=anger_percent, happiness_percent=happiness_percent, sadness_percent=sadness_percent, surprise_percent=surprise_percent,selected_video=filename)
+
+    flash('Invalid file format. Allowed formats: mp4')
+    return redirect(request.url)
+
+@app.route('/update_variable', methods=['POST'])
+def update_variable():    
+    return redirect('index')
 
 if __name__ == '__main__':
     app.run(debug=True)

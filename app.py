@@ -21,7 +21,6 @@ surprise_percent = 0
 
 @app.route('/')
 def index():
-
     return render_template('index.html',uploaded=False, paragraph=paragraph, anger_percent=anger_percent, happiness_percent=happiness_percent, sadness_percent=sadness_percent, surprise_percent=surprise_percent)
 
 @app.route('/upload', methods=['POST'])
