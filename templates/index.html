@@ -222,8 +222,62 @@
         #options-menu:focus::after {
             color: #2980b9;
         }
+        #fileInput {
+        display: none; /* Hide the original file input */
+        }
 
+        .custom-upload-button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .custom-upload-button:hover {
+            background-color: #225475;
+        }
+
+        #custom-upload-label {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            color: #3498db;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #custom-upload-label:hover {
+            background-color: #3498db;
+            color: #fff;
+        }
     </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#uploadButton").click(function() {
+                // Make an AJAX request to your Flask route to update the variable
+                $.ajax({
+                    type: 'POST',
+                    url: '/update_variable',  // Update this with your Flask route
+                    success: function(response) {
+                        console.log("Variable updated successfully");
+                        // Update the variable display on success
+                        $("#variableDisplay").text(response.new_value);
+                    },
+                    error: function(error) {
+                        console.error("Error updating variable", error);
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="header">
@@ -233,10 +287,12 @@
         <h1>Paragraph</h1>
         <p>{{ paragraph }}</p>
         
+        {% if uploaded %}
         <video width="800" height="360" controls>
             <source src="{{ url_for('static', filename=selected_video) }}" type="video/mp4">
             Your browser does not support the video tag.
         </video>
+        {% endif %}
 
         <h1>Emotion Meters</h1>
         <div class="meter-container">
@@ -274,8 +330,10 @@
                 </div>
                 <br>
                 <label for="fileInput" class="custom-upload-button">
-                    <i class="fas fa-upload"></i> Upload a File
+                    <i class="fas fa-upload"></i> Upload a Video
                 </label>
+                <span id="custom-upload-label">No file chosen</span>
+                <input type="file" name="file" id="fileInput" style="display: none;">
                 <br><br>
                 <input type="file" name="file" id="fileInput" style="display: none;">
                 <button type="submit" class="submit-button">Submit</button>

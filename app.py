@@ -5,7 +5,7 @@ from sentiAnalysis import convert_video_to_wav,sentimentAnalysis
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static'
-app.config['ALLOWED_EXTENSIONS'] = {'mp4','wmv'}
+app.config['ALLOWED_EXTENSIONS'] = {'mp4','wmv','jpg','png','jpeg'}
 app.config['SECRET_KEY'] = 'your_secret_key_here'  
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -13,16 +13,16 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-paragraph = "Summary"
+paragraph = ""
 anger_percent = 0
 happiness_percent = 0
-sadness_percent = 100
-surprise_percent = 20
+sadness_percent = 0
+surprise_percent = 0
 
 @app.route('/')
 def index():
 
-    return render_template('index.html', paragraph=paragraph, anger_percent=anger_percent, happiness_percent=happiness_percent, sadness_percent=sadness_percent, surprise_percent=surprise_percent)
+    return render_template('index.html',uploaded=False, paragraph=paragraph, anger_percent=anger_percent, happiness_percent=happiness_percent, sadness_percent=sadness_percent, surprise_percent=surprise_percent)
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -57,10 +57,14 @@ def upload():
         
         surprise_percent = surprise*80
         flash('File uploaded successfully')
-        return render_template('index.html', paragraph=text, anger_percent=anger_percent, happiness_percent=happiness_percent, sadness_percent=sadness_percent, surprise_percent=surprise_percent,selected_video=filename)
+        return render_template('index.html',uploaded=True, paragraph=text, anger_percent=anger_percent, happiness_percent=happiness_percent, sadness_percent=sadness_percent, surprise_percent=surprise_percent,selected_video=filename)
 
     flash('Invalid file format. Allowed formats: mp4')
     return redirect(request.url)
+
+@app.route('/update_variable', methods=['POST'])
+def update_variable():    
+    return redirect('index')
 
 if __name__ == '__main__':
     app.run(debug=True)
