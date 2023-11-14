@@ -177,6 +177,52 @@
         .dropdown-item:hover {
         background-color: #2980b9; /* Darker blue when hovered */
         }
+
+
+        #options-menu {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #3498db;
+        border-radius: 5px;
+        background-color: #ecf0f1;
+        color: #3498db;
+        appearance: none; /* Remove default arrow icon in some browsers */
+        cursor: pointer;
+        outline: none; /* Remove outline on focus */
+        width: 200px;
+        transition: border-color 0.3s ease;
+        }
+
+        #options-menu:hover,
+        #options-menu:focus {
+            border-color: #2980b9;
+        }
+
+        #options-menu option {
+            background-color: #ecf0f1;
+            color: #3498db;
+        }
+
+        /* Style the arrow icon for browsers that support it */
+        #options-menu::-ms-expand {
+            display: none;
+        }
+
+        #options-menu::after {
+            content: '\25BC'; /* Unicode character for down arrow */
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        /* Style on hover and focus for the arrow icon */
+        #options-menu:hover::after,
+        #options-menu:focus::after {
+            color: #2980b9;
+        }
+
     </style>
 </head>
 <body>
@@ -219,11 +265,11 @@
             <h1>File Upload</h1>
             <form class="file-upload-form" method="post" action="/upload" enctype="multipart/form-data">
                 <div class="menu-container">
-                    <label for="options-menu">Select Video Language:</label>
+                    <label for="options-menu">Select Sentiment Analysis Type:</label>
                     <select id="options-menu" name="selected_option">
-                        <option value="option1">English</option>
-                        <option value="option2">Hindi</option>
-                        <option value="option3">Marathi</option>
+                        <option value="option1">Image</option>
+                        <option value="option2">Video</option>
+                        <option value="option3">Video Using Audio</option>
                     </select>
                 </div>
                 <br>
