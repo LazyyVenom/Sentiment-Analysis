@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Emotion Meters</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        .header {
+            background-color: #3498db;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #fff;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .container {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .meter-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .meter {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .meter.anger .meter-bar {
+            background-color: #e74c3c; /* Red for Anger */
+        }
+
+        .meter.happiness .meter-bar {
+            background-color: #f39c12; /* Orange for Happiness */
+        }
+
+        .meter.sadness .meter-bar {
+            background-color: #3498db; /* Blue for Sadness */
+        }
+
+        .meter.surprise .meter-bar {
+            background-color: #2ecc71; /* Green for Surprise */
+        }
+
+        .meter h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .meter-bar {
+            height: 20px;
+            color: #fff;
+            text-align: center;
+            line-height: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            background-color: #3498db; /* Default background color for meter bar */
+        }
+
+        .meter-bar::before {
+            content: '';
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #225475 50%, #fff 50%);
+            background-size: 200% 100%;
+            animation: fill 2s linear infinite;
+        }
+
+        @keyframes fill {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Sentiment Analysis</h1>
+    </div>
+    <div class="container">
+        <h1>Paragraph</h1>
+        <p>{{ paragraph }}</p>
+        
+        {% if option == 'video' %}
+            <video width="800" height="360" controls>
+                <source src="{{ url_for('static', filename=selected_video) }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        {% endif %}
+        {% if option == 'image' %}
+            <img src="{{ url_for('static', filename=selected_image) }}" alt="Uploaded Image">
+        {% endif %}
+
+        <h1>Emotion Meters</h1>
+        <div class="meter-container">
+            <div class="meter anger">
+                <span class="emoji">😡</span>
+                <h3>Anger</h3>
+                <div class="meter-bar" style="width: {{ anger_percent }}%;">{{ anger_percent }}%</div>
+            </div>
+            <div class="meter happiness">
+                <span class="emoji">😄</span>
+                <h3>Happiness</h3>
+                <div class="meter-bar" style="width: {{ happiness_percent }}%;">{{ happiness_percent }}%</div>
+            </div>
+            <div class="meter sadness">
+                <span class="emoji">😢</span>
+                <h3>Sadness</h3>
+                <div class="meter-bar" style="width: {{ sadness_percent }}%;">{{ sadness_percent }}%</div>
+            </div>
+            <div class="meter surprise">
+                <span class="emoji">😲</span>
+                <h3>Surprise</h3>
+                <div class="meter-bar" style="width: {{ surprise_percent }}%;">{{ surprise_percent }}%</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
