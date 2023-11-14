@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flashes">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
     <title>Emotion Meters</title>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -117,6 +127,98 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        label {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        label:hover {
+            background-color: #45a049;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+        #options-menu {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #3498db;
+        border-radius: 5px;
+        background-color: #ecf0f1;
+        color: #3498db;
+        appearance: none; /* Remove default arrow icon in some browsers */
+        cursor: pointer;
+        outline: none; /* Remove outline on focus */
+        width: 200px;
+        transition: border-color 0.3s ease;
+        }
+
+        #options-menu:hover,
+        #options-menu:focus {
+            border-color: #2980b9;
+        }
+
+        #options-menu option {
+            background-color: #ecf0f1;
+            color: #3498db;
+        }
+
+        /* Style the arrow icon for browsers that support it */
+        #options-menu::-ms-expand {
+            display: none;
+        }
+
+        #options-menu::after {
+            content: '\25BC'; /* Unicode character for down arrow */
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        /* Style on hover and focus for the arrow icon */
+        #options-menu:hover::after,
+        #options-menu:focus::after {
+            color: #2980b9;
+        }
+
+        #link {
+            width: 400px; /* Adjust the width as needed */
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px; /* Adjust the font size as needed */
+        }
+
     </style>
 </head>
 <body>
@@ -127,14 +229,14 @@
         <h1>Sentiments</h1>
         <p>{{ paragraph }}</p>
         
-        {% if option == 'video' %}
+        {% if option == "video" %}
             <video width="800" height="360" controls>
-                <source src="{{ url_for('static', filename=selected_video) }}" type="video/mp4">
+                <source src="static\video.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         {% endif %}
-        {% if option == 'image' %}
-            <img src="{{ url_for('static', filename=selected_image) }}" alt="Uploaded Image">
+        {% if option == "image" %}
+            <img src="static\image.jpg" alt="Uploaded Image">
         {% endif %}
 
         <h1>Emotion Meters</h1>
@@ -160,6 +262,26 @@
                 <div class="meter-bar" style="width: {{ surprise_percent }}%;">{{ surprise_percent }}%</div>
             </div>
         </div>
+    </div>
+    <br>
+    <div class = "container">
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+            <h2>CHOOSE A FILE OR PASTE A LINK </h2><br>
+            <div class="menu-container">
+
+                <select id="options-menu" name="selected_option">
+                    <option value="image">Image</option>
+                    <option value="video">Video</option>
+                    <option value="audio">Video Using Audio</option>
+                </select>
+            </div>
+            <br>
+            Paste Link <input type= "text" id="link"> OR
+            <label for="file">Choose a file</label>
+            <input type="file" id="file" name="file">
+            <br><br>
+            <button type="submit">Upload</button>
+        </form>
     </div>
 </body>
 </html>
