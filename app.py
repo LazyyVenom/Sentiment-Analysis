@@ -25,15 +25,36 @@ data = {
 @app.route('/')
 def index():
     # You can replace these values with your actual data
-    selected_option = request.args.get('selected_option', 'None')
-    link = request.args.get('link', '')
     return render_template('index.html',**data)
 
-@app.route('/upload', methods=['POST'])
+selected_option = ''
+@app.route('/select', methods=['POST'])
+def select_option():
+    global selected_option
+    selected_option = request.form.get('selected_option')
+    optionConvert = {
+                    'instaImg':'image',
+                    'upload':'video',
+                    'youtube':'video',
+                    'instaReel':'video'
+                }
+    data = {
+                    'paragraph': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                    'option': optionConvert[selected_option], 
+                    'anger_percent': 0,
+                    'happiness_percent': 0,
+                    'sadness_percent': 0,
+                    'surprise_percent': 0,
+                    'selected_option' : selected_option,
+                    'link' : ""
+                }
+    return render_template('index.html',**data)
+    
+@app.route('/upload', methods=['POST','GET'])
 def upload_file():
     if 'file' not in request.files:
         flash('No file part', 'error')
-        return redirect(request.url)
+        return "ERROR"
 
     file = request.files['file']
     selected_option = request.form.get('selected_option')
@@ -56,19 +77,19 @@ def upload_file():
 
         data = {
                     'paragraph': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                    'option': option,  # or 'video'
+                    'processed':'True',
+                    'option': option, 
+                    'selected_option':selected_option,
                     'anger_percent': 0,
                     'happiness_percent': 0,
                     'sadness_percent': 0,
                     'surprise_percent': 0,
-                    'selected_option' : option,
                     'link' : link
                 }
 
         return render_template("index.html",**data)
     else:
-        flash('Invalid file format', 'error')
-        return redirect(url_for('index', option=selected_option,selected_option=selected_option, link=link))
+        return render_template("ERROR")
 
 if __name__ == '__main__':
     app.run(debug=True)

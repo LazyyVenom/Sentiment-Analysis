@@ -3,11 +3,11 @@
 <head>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
-        <ul class="flashes">
-        {% for message in messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
     {% endif %}
     {% endwith %}
     <title>Emotion Meters</title>
@@ -140,7 +140,7 @@
         }
 
         label {
-            background-color: #4caf50;
+            background-color: #c053aa;
             color: #fff;
             padding: 10px 15px;
             border-radius: 4px;
@@ -149,7 +149,7 @@
         }
 
         label:hover {
-            background-color: #45a049;
+            background-color: #a04583;
         }
 
         button {
@@ -218,6 +218,15 @@
             box-sizing: border-box;
             font-size: 14px; /* Adjust the font size as needed */
         }
+        #caption {
+            width: 400px; /* Adjust the width as needed */
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px; /* Adjust the font size as needed */
+        }
 
     </style>
 </head>
@@ -225,6 +234,7 @@
     <div class="header">
         <h1>Sentiment Analysis</h1>
     </div>
+    {% if processed == "True" %}
     <div class="container">
         <h1>Sentiments</h1>
         <p>{{ paragraph }}</p>
@@ -263,25 +273,50 @@
             </div>
         </div>
     </div>
-    <br>
+    {% endif %}
     <div class = "container">
-        <form method="POST" action="/upload" enctype="multipart/form-data">
+        <form method="POST" action="/select" enctype="multipart/form-data">
             <h2>CHOOSE A FILE OR PASTE A LINK </h2><br>
             <div class="menu-container">
-
                 <select id="options-menu" name="selected_option">
-                    <option value="image">Image</option>
-                    <option value="video">Video</option>
-                    <option value="audio">Video Using Audio</option>
+                    <option value="instaImg">InstaGram - Image</option>
+                    <option value="instaReel">InstaGram - Reel</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="upload">Upload</option>
                 </select>
             </div>
+            <button type="submit">Select Option</button>
+        </form>
+    </div>
+    {% if selected_option == "youtube" %}
+    <div class="container">
+        <form action="/link">
+            Paste Link <input type= "text" id="link">
             <br>
-            Paste Link <input type= "text" id="link"> OR
+            <button type="submit">Start</button>
+        </form>
+    </div>
+    {% endif %}
+    {% if selected_option == "instaImg" or selected_option == "instaReel" %}
+    <div class="container">
+    <form action="/insta">
+        Caption <input type= "text" id="caption"><br><br>
+        <label for="file">Upload POST or REEL</label>
+        <input type="file" id="file" name="file">
+        <br><br>
+        <button type="submit">Start</button>
+    </form>
+    </div>
+    {% endif %}
+    {% if selected_option == "upload" %}
+    <div class="container">
+        <form action="/upload" method="post" enctype="multipart/form-data">
             <label for="file">Choose a file</label>
             <input type="file" id="file" name="file">
             <br><br>
-            <button type="submit">Upload</button>
-        </form>
+            <button type="submit">Start</button>
+        </form>        
     </div>
+    {% endif %}
 </body>
 </html>
