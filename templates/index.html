@@ -34,7 +34,7 @@
         .header h1 {
             color: #fff;
             margin: 0;
-            font-size: 24px;
+            font-size: 38px;
         }
 
         .container {
@@ -251,6 +251,11 @@
 
         <h1>Emotion Meters</h1>
         <div class="meter-container">
+            <div class="meter neutral">
+                <span class="emoji">😐</span>
+                <h3>Neutral</h3>
+                <div class="meter-bar" style="width: {{ neutral_percent }}%;">{{ neutral_percent }}%</div>
+            </div>
             <div class="meter anger">
                 <span class="emoji">😡</span>
                 <h3>Anger</h3>
@@ -271,6 +276,7 @@
                 <h3>Surprise</h3>
                 <div class="meter-bar" style="width: {{ surprise_percent }}%;">{{ surprise_percent }}%</div>
             </div>
+            
         </div>
     </div>
     {% endif %}
@@ -290,6 +296,7 @@
     </div>
     {% if selected_option == "youtube" %}
     <div class="container">
+        <h2 style="color: #bc0808;">YouTube</h2>
         <form action="/link">
             Paste Link <input type= "text" id="link">
             <br>
@@ -299,6 +306,7 @@
     {% endif %}
     {% if selected_option == "instaImg" or selected_option == "instaReel" %}
     <div class="container">
+        <h2 style="color: #c50776;">InstaGram</h2>
     <form action="/insta">
         Caption <input type= "text" id="caption"><br><br>
         <label for="file">Upload POST or REEL</label>
@@ -310,6 +318,7 @@
     {% endif %}
     {% if selected_option == "upload" %}
     <div class="container">
+        <h2 style="color: #04bc48;">Upload</h2>
         <form action="/upload" method="post" enctype="multipart/form-data">
             <label for="file">Choose a file</label>
             <input type="file" id="file" name="file">

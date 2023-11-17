@@ -89,7 +89,7 @@ def upload_file():
 
         return render_template("index.html",**data)
     else:
-        return render_template("ERROR")
+        return "ERROR"
 
 if __name__ == '__main__':
     app.run(debug=True)
