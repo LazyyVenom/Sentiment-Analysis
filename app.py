@@ -16,6 +16,7 @@ def allowed_file(filename):
 data = {
     'paragraph': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     'option': 'None',  # or 'video'
+    'neutral_percent': 0,
     'anger_percent': 0,
     'happiness_percent': 0,
     'sadness_percent': 0,
@@ -41,6 +42,7 @@ def select_option():
     data = {
                     'paragraph': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
                     'option': optionConvert[selected_option], 
+                    'neutral_percent': 0,
                     'anger_percent': 0,
                     'happiness_percent': 0,
                     'sadness_percent': 0,
@@ -80,13 +82,14 @@ def upload_file():
                     'processed':'True',
                     'option': option, 
                     'selected_option':selected_option,
+                    'neutral_percent': 0,
                     'anger_percent': 0,
                     'happiness_percent': 0,
                     'sadness_percent': 0,
                     'surprise_percent': 0,
                     'link' : link
                 }
-
+        
         return render_template("index.html",**data)
     else:
         return "ERROR"
