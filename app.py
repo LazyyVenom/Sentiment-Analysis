@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import os
+from sentimentsAnalysis import imageAnalysis,videoAnalysis,captionAnalysis
 
 app = Flask(__name__)
 
@@ -33,23 +34,10 @@ selected_option = ''
 def select_option():
     global selected_option
     selected_option = request.form.get('selected_option')
-    optionConvert = {
-                    'instaImg':'image',
-                    'upload':'video',
-                    'youtube':'video',
-                    'instaReel':'video'
-                }
     data = {
-                    'paragraph': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                    'option': optionConvert[selected_option], 
-                    'neutral_percent': 0,
-                    'anger_percent': 0,
-                    'happiness_percent': 0,
-                    'sadness_percent': 0,
-                    'surprise_percent': 0,
                     'selected_option' : selected_option,
-                    'link' : ""
                 }
+    
     return render_template('index.html',**data)
     
 @app.route('/upload', methods=['POST','GET'])
@@ -69,13 +57,15 @@ def upload_file():
     if file and allowed_file(file.filename):
         if not os.path.exists(app.config['UPLOAD_FOLDER']):
             os.makedirs(app.config['UPLOAD_FOLDER'])
-        if selected_option == 'image':
+        if file.filename.rsplit('.', 1)[1].lower() in ['jpg', 'png', 'jpeg']:
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], "image.jpg"))
             option = 'image'
         else:
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], "video.mp4"))
             option = 'video'
         flash('File uploaded successfully!', 'success')
+
+
 
         data = {
                     'paragraph': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
