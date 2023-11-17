@@ -93,20 +93,20 @@
 
         .meter-bar {
             height: 20px;
-            color: #ffffff;
+            color: #000000;
             text-align: center;
             line-height: 20px;
             border-radius: 5px;
             font-size: 16px;
             margin-bottom: 10px;
-            background-color: #6c6c6c; /* Default background color for meter bar */
+            background-color: #9f9f9f; /* Default background color for meter bar */
         }
 
         .meter-bar::before {
             content: '';
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, #225475 50%, #fff 50%);
+            background: linear-gradient(90deg, #225475 50%, #1f1e1e 50%);
             background-size: 200% 100%;
             animation: fill 2s linear infinite;
         }
@@ -122,11 +122,15 @@
 
         img {
             max-width: 100%;
+            max-height: 400px;
             height: auto;
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            display: block;
             margin-bottom: 20px;
         }
+
         form {
             background-color: #fff;
             padding: 20px;
@@ -259,17 +263,17 @@
             <div class="meter anger">
                 <span class="emoji">😡</span>
                 <h3>Anger</h3>
-                <div class="meter-bar" style="width: {{ anger_percent }}%;">{{ anger_percent }}%</div>
+                <div class="meter-bar" style="width: {{ angry_percent }}%;">{{ angry_percent }}%</div>
             </div>
             <div class="meter happiness">
                 <span class="emoji">😄</span>
                 <h3>Happiness</h3>
-                <div class="meter-bar" style="width: {{ happiness_percent }}%;">{{ happiness_percent }}%</div>
+                <div class="meter-bar" style="width: {{ happy_percent }}%;">{{ happy_percent }}%</div>
             </div>
             <div class="meter sadness">
                 <span class="emoji">😢</span>
                 <h3>Sadness</h3>
-                <div class="meter-bar" style="width: {{ sadness_percent }}%;">{{ sadness_percent }}%</div>
+                <div class="meter-bar" style="width: {{ sad_percent }}%;">{{ sad_percent }}%</div>
             </div>
             <div class="meter surprise">
                 <span class="emoji">😲</span>

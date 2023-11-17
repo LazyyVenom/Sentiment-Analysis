@@ -65,15 +65,9 @@ def upload_file():
         flash('File uploaded successfully!', 'success')
 
         data = {
-                    'paragraph': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
                     'processed':'True',
                     'option': option, 
                     'selected_option':selected_option,
-                    'neutral_percent': 0,
-                    'anger_percent': 0,
-                    'happiness_percent': 0,
-                    'sadness_percent': 0,
-                    'surprise_percent': 0,
                 }
         
         if option == 'image':
@@ -94,7 +88,7 @@ def upload_file():
             data['happy_percent'] = emotions['happy']
             data['sad_percent'] = emotions['sad']
             data['surprise_percent'] = emotions['surprise']
-
+            data['paragraph'] = "Check Out the Meters"
         
         return render_template("index.html",**data)
     else:
