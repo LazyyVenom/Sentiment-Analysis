@@ -48,7 +48,6 @@ def upload_file():
 
     file = request.files['file']
     selected_option = request.form.get('selected_option')
-    link = request.form.get('link')
 
     if file.filename == '':
         flash('No selected file', 'error')
@@ -65,8 +64,6 @@ def upload_file():
             option = 'video'
         flash('File uploaded successfully!', 'success')
 
-
-
         data = {
                     'paragraph': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
                     'processed':'True',
@@ -77,8 +74,27 @@ def upload_file():
                     'happiness_percent': 0,
                     'sadness_percent': 0,
                     'surprise_percent': 0,
-                    'link' : link
                 }
+        
+        if option == 'image':
+            emotions = imageAnalysis(r"static/image.jpg")
+            #Feeding Data
+            data['neutral_percent'] = emotions['neutral']
+            data['angry_percent'] = emotions['angry']
+            data['happy_percent'] = emotions['happy']
+            data['sad_percent'] = emotions['sad']
+            data['surprise_percent'] = emotions['surprise']
+            data['paragraph'] = emotions['message']
+
+        else:
+            emotions = videoAnalysis(r"static/video.mp4")
+            #Feeding Data
+            data['neutral_percent'] = emotions['neutral']
+            data['angry_percent'] = emotions['angry']
+            data['happy_percent'] = emotions['happy']
+            data['sad_percent'] = emotions['sad']
+            data['surprise_percent'] = emotions['surprise']
+
         
         return render_template("index.html",**data)
     else:
