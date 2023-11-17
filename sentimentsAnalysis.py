@@ -98,7 +98,7 @@ def videoAnalysis(video):
         cap.set(cv2.CAP_PROP_POS_FRAMES, cap.get(cv2.CAP_PROP_POS_FRAMES) + skip_frames)
 
     # Calculate average emotion scores
-    average_emotion_scores = {emotion_type: total_score / total_frames for emotion_type, total_score in total_emotion_scores.items()}
+    average_emotion_scores = {emotion_type: round((total_score / total_frames),2) for emotion_type, total_score in total_emotion_scores.items()}
 
     # Release the video capture object
     cap.release()
