@@ -29,10 +29,9 @@ def index():
     # You can replace these values with your actual data
     return render_template('index.html',**data)
 
-selected_option = ''
+
 @app.route('/select', methods=['POST'])
 def select_option():
-    global selected_option
     selected_option = request.form.get('selected_option')
     data = {
                     'selected_option' : selected_option,

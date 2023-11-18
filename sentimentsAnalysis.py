@@ -26,9 +26,9 @@ def imageAnalysis(img):
             "happy" : happy,
             "sad" : sad,
             "surprise" : surprise,
-            "message" : f"Most Dominant/Significant Emotion is {dominant}"
+            "message" : f"Most Dominant/Significant Emotion is <b>{dominant.capitalize()}</b>"
         }
-
+        
         return data
     
     except Exception as e:
