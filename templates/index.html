@@ -321,11 +321,11 @@
         {% endif %}
 
         <h1>Emotion Meters</h1>
-
-        <div class="user-info">
+        
+        <!-- <div class="user-info">
             <p>Age: {{ age }}</p>
             <p>Gender: {{ gender }}</p>
-        </div>    
+        </div>     -->
 
         <div class="meter-container">
             <div class="meter neutral">
@@ -375,23 +375,24 @@
     {% if selected_option == "youtube" %}
     <div class="container">
         <h2 style="color: #bc0808;">YouTube</h2>
-        <form action="/link">
-            Paste Link <input type= "text" id="link">
+        <form action="/link" method="POST">
+            Paste Link <input type="url" id="link" name="linkyt" required>
             <br>
-            <button type="submit">Start</button>
-        </form>
+            <button type="submit" id="start-button" onclick="startProcessing()">Start</button>
+        </form>        
     </div>
     {% endif %}
     {% if selected_option == "instaImg" or selected_option == "instaReel" %}
     <div class="container">
         <h2 style="color: #c50776;">InstaGram</h2>
-    <form action="/insta">
-        Caption <input type= "text" id="caption"><br><br>
-        <label for="file">Upload POST or REEL</label>
-        <input type="file" id="file" name="file">
-        <br><br>
-        <button type="submit">Start</button>
-    </form>
+        <form action="/insta" method="POST" enctype="multipart/form-data">
+            <label for="caption">Caption</label>
+            <input type="text" id="caption" name="caption"><br><br>
+            <label for="file">Upload POST or REEL</label>
+            <input type="file" id="file" name="file" required>
+            <br><br>
+            <button type="submit" id="start-button" onclick="startProcessing()">Start</button>
+        </form>
     </div>
     {% endif %}
     {% if selected_option == "upload" %}
@@ -399,7 +400,7 @@
         <h2 style="color: #04bc48;">Upload</h2>
         <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
             <label for="file">Choose a file</label>
-            <input type="file" id="file" name="file">
+            <input type="file" id="file" name="file" required>
             <br><br>
             <button type="submit" id="start-button" onclick="startProcessing()">Start</button>
         </form>        

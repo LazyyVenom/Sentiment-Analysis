@@ -1,7 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, flash,url_for
 import os
 from sentimentsAnalysis import imageAnalysis,videoAnalysis,captionAnalysis
 
+def youtubeDownload(link):
+    from pytube import YouTube
+    yt = YouTube(link)
+    video_stream = yt.streams.get_by_resolution("360p")
+    video_stream.download(output_path='static',filename="video.mp4")
+    return "Completed"
 app = Flask(__name__)
 
 # Set a secret key for session security
@@ -33,12 +39,96 @@ def index():
 @app.route('/select', methods=['POST'])
 def select_option():
     selected_option = request.form.get('selected_option')
+    
+    return render_template('index.html',selected_option=selected_option)
+
+
+@app.route('/link',methods=['POST','GET'])
+def linkAnalysis():
+    #https://www.youtube.com/watch?v=ePNzlRFvR4E
+    link = request.form.get("linkyt")
+    print(link)
+    print("HERE")
+    youtubeDownload(link)
+    emotions = videoAnalysis(r"static/video.mp4")
     data = {
-                    'selected_option' : selected_option,
+                    'processed':'True',
+                    'option': "video", 
+                    'selected_option':"youtube",
                 }
-    
-    return render_template('index.html',**data)
-    
+
+    data['neutral_percent'] = emotions['neutral']
+    data['angry_percent'] = emotions['angry']
+    data['happy_percent'] = emotions['happy']
+    data['sad_percent'] = emotions['sad']
+    data['surprise_percent'] = emotions['surprise']
+    data['paragraph'] = "Check Out the Meters"
+
+    return render_template("index.html",**data)
+
+
+@app.route('/insta', methods=['POST','GET'])
+def upload_insta():
+    print(request.files)
+    print(request.form)
+    if 'file' not in request.files:
+        flash('No file part', 'error')
+        return "ERROR - No file part"
+
+    file = request.files['file']
+    # selected_option = request.form.get('selected_option')
+    caption = request.form.get('caption')
+
+    if file.filename == '':
+        flash('No selected file', 'error')
+        return redirect(request.url)
+
+    if file and allowed_file(file.filename):
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            os.makedirs(app.config['UPLOAD_FOLDER'])
+        if file.filename.rsplit('.', 1)[1].lower() in ['jpg', 'png', 'jpeg']:
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], "image.jpg"))
+            option = 'image'
+        else:
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], "video.mp4"))
+            option = 'video'
+        flash('File uploaded successfully!', 'success')
+
+        data = {
+                    'processed':'True',
+                    'option': option, 
+                    'selected_option':"instaReel",
+                }
+        
+        if option == 'image':
+            emotions = imageAnalysis(r"static/image.jpg")
+            captionFeedback = captionAnalysis(caption)
+            
+            #Feeding Data
+            data['neutral_percent'] = emotions['neutral']
+            data['angry_percent'] = emotions['angry']
+            data['happy_percent'] = emotions['happy']
+            data['sad_percent'] = emotions['sad']
+            data['surprise_percent'] = emotions['surprise']
+            data['paragraph'] = emotions['message'] + captionFeedback
+
+        else:
+            emotions = videoAnalysis(r"static/video.mp4")
+            captionFeedback = captionAnalysis(caption)
+
+            #Feeding Data
+            data['neutral_percent'] = emotions['neutral']
+            data['angry_percent'] = emotions['angry']
+            data['happy_percent'] = emotions['happy']
+            data['sad_percent'] = emotions['sad']
+            data['surprise_percent'] = emotions['surprise']
+            data['paragraph'] = "Check Out the Meters" + captionFeedback
+        
+        return render_template("index.html",**data)
+    else:
+        return "ERROR - Error"
+
+
 @app.route('/upload', methods=['POST','GET'])
 def upload_file():
     if 'file' not in request.files:
