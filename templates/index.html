@@ -231,9 +231,76 @@
             box-sizing: border-box;
             font-size: 14px; /* Adjust the font size as needed */
         }
+        body.blurred {
+            pointer-events: none; /* Disable interaction with blurred elements */
+        }
+
+        #processing-overlay {
+            /* Position the processing overlay */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            display: none; /* Initially hidden */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Make sure it's above other elements */
+        }
+
+        #processing-screen {
+            /* Style the processing screen */
+            text-align: center;
+        }
+        .user-info {
+            background-color: #ffffff;
+            border: 1px solid #dedede;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+            .user-info p {
+            font-size: 18px;
+            margin: 15px 0;
+            color: #333;
+        }
+
+            .user-info p strong {
+            font-weight: bold;
+            color: #2c3e50; /* Darker blue color for labels */
+        }
+
+            .user-info p span {
+            font-weight: normal;
+            color: #555;
+        }
+
 
     </style>
+    <script>
+        function startProcessing() {
+            // Show the blur effect on the entire page
+            document.body.classList.add('blurred');
+
+            // Show the processing overlay
+            document.getElementById('processing-overlay').style.display = 'flex';
+
+            // Submit the form after a short delay to allow the processing screen to be displayed
+            setTimeout(function() {
+                document.getElementById('upload-form').submit();
+            }, 500); // Adjust the delay as needed
+        }
+    </script>
 </head>
+<div id="processing-overlay">
+    <div id="processing-screen">
+        <p>Processing...</p>
+        <img src="{{ url_for('static', filename='loading.gif') }}" alt="Loading">
+    </div>
+</div>
 <body>
     <div class="header">
         <h1>Sentiment Analysis</h1>
@@ -254,6 +321,12 @@
         {% endif %}
 
         <h1>Emotion Meters</h1>
+
+        <div class="user-info">
+            <p>Age: {{ age }}</p>
+            <p>Gender: {{ gender }}</p>
+        </div>    
+
         <div class="meter-container">
             <div class="meter neutral">
                 <span class="emoji">😐</span>
@@ -284,15 +357,16 @@
         </div>
     </div>
     {% endif %}
+    
     <div class = "container">
         <form method="POST" action="/select" enctype="multipart/form-data">
             <h2>CHOOSE A METHOD </h2><br>
             <div class="menu-container">
                 <select id="options-menu" name="selected_option">
-                    <option value="instaImg">InstaGram - Image</option>
-                    <option value="instaReel">InstaGram - Reel</option>
-                    <option value="youtube">YouTube</option>
-                    <option value="upload">Upload</option>
+                    <option value="instaImg" {% if selected_option == 'instaImg' %}selected{% endif %}>InstaGram - Image</option>
+                    <option value="instaReel" {% if selected_option == 'instaReel' %}selected{% endif %}>InstaGram - Reel</option>
+                    <option value="youtube" {% if selected_option == 'youtube' %}selected{% endif %}>YouTube</option>
+                    <option value="upload" {% if selected_option == 'upload' %}selected{% endif %}>Upload</option>
                 </select>
             </div>
             <button type="submit">Select Option</button>
@@ -323,11 +397,11 @@
     {% if selected_option == "upload" %}
     <div class="container">
         <h2 style="color: #04bc48;">Upload</h2>
-        <form action="/upload" method="post" enctype="multipart/form-data">
+        <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
             <label for="file">Choose a file</label>
             <input type="file" id="file" name="file">
             <br><br>
-            <button type="submit">Start</button>
+            <button type="submit" id="start-button" onclick="startProcessing()">Start</button>
         </form>        
     </div>
     {% endif %}
