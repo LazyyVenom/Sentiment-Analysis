@@ -11,6 +11,6 @@ Front End:
 WebApp for using flask frame work and using HTML, CSS and Basic JS.
 Back End:
 Created Sentiment analysis functions and caption analysis functions. (Python)
-    1. Youtube Downloader: pytube
-    2. Sentiment Analysis (Images & Video): DeepFace and cv2
-    3. Caption Analysis (Text): TextBlob
+1. Youtube Downloader: pytube
+2. Sentiment Analysis (Images & Video): DeepFace and cv2
+3. Caption Analysis (Text): TextBlob
